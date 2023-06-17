@@ -20,6 +20,20 @@ server.listen(serverPort);
 console.log(`Server started on port ${serverPort} in stage ${process.env.NODE_ENV}`);
 
 wss.on("connection", function (ws, req) {
+
+  const query = url.parse(req.url, true).query;
+  const room = query.room || 'default'; // Imposta una stanza predefinita se non viene fornito il parametro "room" nell'URL
+
+  // Crea la stanza se non esiste
+  if (!rooms[room]) {
+    rooms[room] = new Set();
+  }
+
+  // Aggiungi il client alla stanza
+  rooms[room].add(ws);
+
+
+  
   console.log("Connection Opened");
   console.log("Client size: ", wss.clients.size);
 
