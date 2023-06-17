@@ -51,7 +51,7 @@ wss.on("connection", function (ws, req) {
       console.log('keepAlive');
       return;
     }
-    broadcast(ws, stringifiedData, false);
+    broadcast(ws, stringifiedData, false, room);
   });
 
   ws.on("close", (data) => {
@@ -69,7 +69,7 @@ wss.on("connection", function (ws, req) {
 
 
 // Implement broadcast function because of ws doesn't have it
-const broadcast = (ws, message, includeSelf) => {
+const broadcast = (ws, message, includeSelf, room) => {
   if (includeSelf) {
     rooms[room].clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
