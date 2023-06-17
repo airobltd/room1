@@ -26,12 +26,12 @@ wss.on("connection", function (ws, req) {
   const room = query.room || 'default'; // Imposta una stanza predefinita se non viene fornito il parametro "room" nell'URL
 
   // Crea la stanza se non esiste
-  if (!rooms[room]) {
-    rooms[room] = new Set();
-  }
+  //if (!rooms[room]) {
+    //rooms[room] = new Set();
+  //}
 
   // Aggiungi il client alla stanza
-  rooms[room].add(ws);
+  //rooms[room].add(ws);
 
 
   
