@@ -57,6 +57,11 @@ wss.on("connection", function (ws, req) {
   ws.on("close", (data) => {
     console.log("closing connection");
 
+    // Se la stanza è vuota, rimuovila
+    if (rooms[room].size === 0) {
+      delete rooms[room];
+    }
+
     if (wss.clients.size === 0) {
       console.log("last client disconnected, stopping keepAlive interval");
       clearInterval(keepAliveId);
