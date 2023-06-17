@@ -1,83 +1,59 @@
-const http = require("http");
-const express = require("express");
-const app = express();
+const WebSocket = require('ws');
+const url = require('url');
 
-app.use(express.static("public"));
-// require("dotenv").config();
+// Crea un server WebSocket
+const server = new WebSocket.Server({ noServer: true });
 
-const serverPort = process.env.PORT || 3000;
-const server = http.createServer(app);
-const WebSocket = require("ws");
+// Oggetto per tenere traccia delle stanze e dei relativi client
+const rooms = {};
 
-let keepAliveId;
+// Gestisci la connessione WebSocket
+server.on('connection', (socket, req) => {
+  const query = url.parse(req.url, true).query;
+  const room = query.room || 'default'; // Imposta una stanza predefinita se non viene fornito il parametro "room" nell'URL
 
-const wss =
-  process.env.NODE_ENV === "production"
-    ? new WebSocket.Server({ server })
-    : new WebSocket.Server({ port: 5001 });
-
-server.listen(serverPort);
-console.log(`Server started on port ${serverPort} in stage ${process.env.NODE_ENV}`);
-
-wss.on("connection", function (ws, req) {
-  console.log("Connection Opened");
-  console.log("Client size: ", wss.clients.size);
-
-  if (wss.clients.size === 1) {
-    console.log("first connection. starting keepalive");
-    keepServerAlive();
+  // Crea la stanza se non esiste
+  if (!rooms[room]) {
+    rooms[room] = new Set();
   }
 
-  ws.on("message", (data) => {
-    let stringifiedData = data.toString();
-    if (stringifiedData === 'pong') {
-      console.log('keepAlive');
-      return;
-    }
-    broadcast(ws, stringifiedData, false);
+  // Aggiungi il client alla stanza
+  rooms[room].add(socket);
+
+  // Gestisci i messaggi in arrivo
+  socket.on('message', (message) => {
+    // Invia il messaggio a tutti i client nella stanza
+    rooms[room].forEach((client) => {
+      if (client !== socket && client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
   });
 
-  ws.on("close", (data) => {
-    console.log("closing connection");
+  // Gestisci la chiusura della connessione
+  socket.on('close', () => {
+    // Rimuovi il client dalla stanza
+    rooms[room].delete(socket);
 
-    if (wss.clients.size === 0) {
-      console.log("last client disconnected, stopping keepAlive interval");
-      clearInterval(keepAliveId);
+    // Se la stanza è vuota, rimuovila
+    if (rooms[room].size === 0) {
+      delete rooms[room];
     }
   });
 });
 
-// Implement broadcast function because of ws doesn't have it
-const broadcast = (ws, message, includeSelf) => {
-  if (includeSelf) {
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
-  } else {
-    wss.clients.forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
-  }
-};
+// Crea un server HTTP per gestire le richieste iniziali
+const http = require('http');
+const httpServer = http.createServer();
 
-/**
- * Sends a ping message to all connected clients every 50 seconds
- */
- const keepServerAlive = () => {
-  keepAliveId = setInterval(() => {
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send('ping');
-      }
-    });
-  }, 50000);
-};
+httpServer.on('upgrade', (req, socket, head) => {
+  server.handleUpgrade(req, socket, head, (ws) => {
+    server.emit('connection', ws, req);
+  });
+});
 
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+// Avvia il server HTTP
+const port = 3000; // Puoi modificare la porta a tua scelta
+httpServer.listen(port, () => {
+  console.log(`Server WebSocket avviato sulla porta ${port}`);
 });
