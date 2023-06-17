@@ -33,7 +33,7 @@ wss.on("connection", function (ws, req) {
   }
 
   // Aggiungi il client alla stanza
-  //rooms[room].add(ws);
+  rooms[room].add(ws);
 
 
   
