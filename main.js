@@ -71,13 +71,13 @@ wss.on("connection", function (ws, req) {
 // Implement broadcast function because of ws doesn't have it
 const broadcast = (ws, message, includeSelf, room) => {
   if (includeSelf) {
-    rooms[room].clients.forEach((client) => {
+    rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
     });
   } else {
-    rooms[room].clients.forEach((client) => {
+    rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
