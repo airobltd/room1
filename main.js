@@ -103,6 +103,15 @@ const broadcast = (ws, message, includeSelf, room) => {
   }, 50000);
 };
 
+// Aggiungi un endpoint per ottenere l'elenco delle stanze aperte
+httpServer.on('request', (req, res) => {
+  if (req.url === '/rooms') {
+    const rooms = server.getRooms();
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rooms));
+  }
+});
+
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
