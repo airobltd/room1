@@ -112,6 +112,9 @@ server.on('request', (req, res) => {
   }
 });
 
+app.get('/rooms', (req, res) => {
+    res.send('Ciao Loris');
+});
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
