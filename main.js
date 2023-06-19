@@ -113,7 +113,8 @@ server.on('request', (req, res) => {
 });
 
 app.get('/rooms', (req, res) => {
-    res.send('Ciao Loris');
+   const roomList = Object.keys(rooms);
+  res.json(roomList);
 });
 
 app.get('/', (req, res) => {
