@@ -104,7 +104,7 @@ const broadcast = (ws, message, includeSelf, room) => {
 };
 
 // Aggiungi un endpoint per ottenere l'elenco delle stanze aperte
-httpServer.on('request', (req, res) => {
+server.on('request', (req, res) => {
   if (req.url === '/rooms') {
     const rooms = server.getRooms();
     res.setHeader('Content-Type', 'application/json');
