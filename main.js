@@ -26,7 +26,7 @@ function sendMessageToServer(url, message, port) {
 
   const requestOptions = {
     hostname: url,
-    port: port || 80, // Imposta la porta predefinita a 80 se non specificata
+    port: port
   };
 
   const request = http.request(requestOptions, () => {
