@@ -18,7 +18,7 @@ const wss =
     : new WebSocket.Server({ port: 5001 });
 
 server.listen(serverPort);
-console.log(`Server started on port ${serverPort} in stage ${process.env.NODE_ENV}`);
+console.log(Server started on port ${serverPort} in stage ${process.env.NODE_ENV});
 
 const rooms = {};
 
@@ -79,9 +79,6 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
-        const url = 'amato.dev';  // Sostituisci con l'URL desiderato
-        const messagee = 'Questo è il messaggio che voglio inviare!';
-        //sendMessageToServer(url, messagee,"5055");
       }
     });
   } else {
@@ -123,33 +120,3 @@ app.get('/rooms', (req, res) => {
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-
-
-
-function sendMessageToServer(url, message, port) {
-  const data = message;
-  
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-      'Content-Length': Buffer.byteLength(data)
-    }
-  };
-
-  const requestOptions = {
-    hostname: url,
-    port: port || 80, // Imposta la porta predefinita a 80 se non specificata
-  };
-
-  const request = http.request(requestOptions, () => {
-    console.log('Messaggio inviato con successo!');
-  });
-
-  request.on('error', (error) => {
-    console.error('Errore nella richiesta:', error);
-  });
-
-  request.write(data);
-  request.end();
-}
