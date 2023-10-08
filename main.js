@@ -81,7 +81,7 @@ const broadcast = (ws, message, includeSelf, room) => {
         client.send(message);
         const url = 'amato.dev';  // Sostituisci con l'URL desiderato
         const messagee = 'Questo è il messaggio che voglio inviare!';
-        sendMessageToServer(url, messagee,"5055");
+        //sendMessageToServer(url, messagee,"5055");
       }
     });
   } else {
