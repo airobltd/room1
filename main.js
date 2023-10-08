@@ -12,16 +12,6 @@ const WebSocket = require("ws");
 
 let keepAliveId;
 
-const wss =
-  process.env.NODE_ENV === "production"
-    ? new WebSocket.Server({ server })
-    : new WebSocket.Server({ port: 5001 });
-
-server.listen(serverPort);
-console.log(Server started on port ${serverPort} in stage ${process.env.NODE_ENV});
-
-const rooms = {};
-
 
 function sendMessageToServer(url, message, port) {
   const data = message;
@@ -50,6 +40,16 @@ function sendMessageToServer(url, message, port) {
   request.write(data);
   request.end();
 }
+
+const wss =
+  process.env.NODE_ENV === "production"
+    ? new WebSocket.Server({ server })
+    : new WebSocket.Server({ port: 5001 });
+
+server.listen(serverPort);
+console.log(Server started on port ${serverPort} in stage ${process.env.NODE_ENV});
+
+const rooms = {};
 
 
 wss.on("connection", function (ws, req) {
