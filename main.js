@@ -12,35 +12,6 @@ const WebSocket = require("ws");
 
 let keepAliveId;
 
-
-function sendMessageToServer(url, message, port) {
-  const data = message;
-
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-      'Content-Length': Buffer.byteLength(data)
-    }
-  };
-
-  const requestOptions = {
-    hostname: url,
-    port: port
-  };
-
-  const request = http.request(requestOptions, () => {
-    console.log('Messaggio inviato con successo!');
-  });
-
-  request.on('error', (error) => {
-    console.error('Errore nella richiesta:', error);
-  });
-
-  request.write(data);
-  request.end();
-}
-
 const wss =
   process.env.NODE_ENV === "production"
     ? new WebSocket.Server({ server })
