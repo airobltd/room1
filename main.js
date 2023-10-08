@@ -18,7 +18,7 @@ const wss =
     : new WebSocket.Server({ port: 5001 });
 
 server.listen(serverPort);
-console.log(Server started on port ${serverPort} in stage ${process.env.NODE_ENV});
+console.log(`Server started on port ${serverPort} in stage ${process.env.NODE_ENV}`);
 
 const rooms = {};
 
