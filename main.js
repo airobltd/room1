@@ -120,3 +120,31 @@ app.get('/rooms', (req, res) => {
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
+function sendMessageToServer(url, message, port) {
+  const data = message;
+  
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': Buffer.byteLength(data)
+    }
+  };
+
+  const requestOptions = {
+    hostname: url,
+    port: port || 80
+  };
+
+  const request = http.request(requestOptions, () => {
+    console.log('Messaggio inviato con successo!');
+  });
+
+  request.on('error', (error) => {
+    console.error('Errore nella richiesta:', error);
+  });
+
+  request.write(data);
+  request.end();
+}
