@@ -128,7 +128,7 @@ const broadcast = (ws, message, includeSelf, room) => {
         if (error) {
           console.error('Errore:', error);
         } else {
-          client.send(response+"1");
+          client.send(response);
           console.log('Risposta:', response);
         }
       });
@@ -144,7 +144,7 @@ const broadcast = (ws, message, includeSelf, room) => {
         if (error) {
           console.error('Errore:', error);
         } else {
-          client.send(response+"2");
+          client.send(response);
           console.log('Risposta:', response);
         }
       });
