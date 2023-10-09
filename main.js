@@ -1,4 +1,5 @@
 const http = require("http");
+const https = require('https');
 const express = require("express");
 const url = require('url');
 const app = express();
@@ -11,32 +12,26 @@ const server = http.createServer(app);
 const WebSocket = require("ws");
 
 
-function sendMessageToServer(url, message, port) {
-  const data = message;
+function sendMessageToServer(url) {
+  https.get(url, (response) => {
+  let data = '';
 
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain',
-      'Content-Length': Buffer.byteLength(data)
+  response.on('data', (chunk) => {
+    data += chunk;
+  });
+
+  response.on('end', () => {
+    if (response.statusCode === 200) {
+      console.log(data); // Questo loggherà il contenuto della URL
+    } else {
+      console.error('Errore durante il recupero della URL:', response.statusCode, response.statusMessage);
     }
-  };
-
-  const requestOptions = {
-    hostname: url,
-    port: port,
-  };
-
-  const request = http.request(requestOptions, () => {
-    console.log('Messaggio inviato con successo!');
   });
 
-  request.on('error', (error) => {
-    console.error('Errore nella richiesta:', error);
+  response.on('error', (error) => {
+    console.error('Errore:', error.message);
   });
-
-  request.write(data);
-  request.end();
+});
 }
 
 
@@ -111,9 +106,9 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
-                const targetUrl = 'https://api.sibot.dev/test';  // Sostituisci con l'URL desiderato
+                const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  // Sostituisci con l'URL desiderato
         const messageToSend = 'Questo è il messaggio che voglio inviare!';
-        sendMessageToServer(targetUrl, messageToSend, "443");
+        sendMessageToServer(targetUrl);
             console.log(messageToSend);
 
       }
@@ -122,7 +117,7 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
-                const targetUrl = 'https://api.sibot.dev/test';  // Sostituisci con l'URL desiderato
+                const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  // Sostituisci con l'URL desiderato
         const messageToSend = 'Questo è il messaggio che voglio inviare!!!!!!!!!!!';
         sendMessageToServer(targetUrl, messageToSend, "443");
                     console.log(messageToSend);
