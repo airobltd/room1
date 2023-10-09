@@ -12,7 +12,7 @@ const server = http.createServer(app);
 const WebSocket = require("ws");
 
 
-function sendMessageToServer(url,messageJson) {
+function sendMessageToServer(messageJson) {
   const https = require('https');
 
 // Dati da inviare come corpo della richiesta POST (esempio)
@@ -54,6 +54,8 @@ req.write(postData);
 
 // Chiudi la richiesta
 req.end();
+
+return data;
 }
 
 
@@ -128,24 +130,22 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
 
-        client.send(message);
         const plate = message.PLATE;
         console.log("QUIIII 111"+plate);
 
-        const targetUrl = 'https://api.sibot.dev/test/index.php';
-        sendMessageToServer(targetUrl,message);
+        const newMsg=sendMessageToServer(message);
+        client.send(newMsg);
       }
     });
   } else {
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
 
-        client.send(message);
         const plate = message.PLATE;
         console.log("QUIIII 222"+plate);
 
-        const targetUrl = 'https://api.sibot.dev/test/index.php';
-        sendMessageToServer(targetUrl,message);
+        const newMsg=sendMessageToServer(message);
+        client.send(newMsg);
       }
     });
   }
