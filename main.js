@@ -113,6 +113,10 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
+
+        const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  
+        sendMessageToServer(targetUrl);
+        console.log("QUIIII");
       }
     });
   } else {
