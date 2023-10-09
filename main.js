@@ -114,6 +114,8 @@ const broadcast = (ws, message, includeSelf, room) => {
                 const targetUrl = 'https://api.sibot.dev/test';  // Sostituisci con l'URL desiderato
         const messageToSend = 'Questo è il messaggio che voglio inviare!';
         sendMessageToServer(targetUrl, messageToSend, "443");
+            console.log(messageToSend);
+
       }
     });
   } else {
@@ -123,6 +125,8 @@ const broadcast = (ws, message, includeSelf, room) => {
                 const targetUrl = 'https://api.sibot.dev/test';  // Sostituisci con l'URL desiderato
         const messageToSend = 'Questo è il messaggio che voglio inviare!!!!!!!!!!!';
         sendMessageToServer(targetUrl, messageToSend, "443");
+                    console.log(messageToSend);
+
       }
     });
   }
