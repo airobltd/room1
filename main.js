@@ -124,14 +124,11 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
 
-        const plate = message.PLATE;
-        console.log("QUIIII 111"+plate);
-
         sendMessageToServer(message, (error, response) => {
         if (error) {
           console.error('Errore:', error);
         } else {
-          client.send(response);
+          client.send(response+"1");
           console.log('Risposta:', response);
         }
       });
@@ -143,14 +140,11 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
 
-        const plate = message.PLATE;
-        console.log("QUIIII 222"+plate);
-
         sendMessageToServer(message, (error, response) => {
         if (error) {
           console.error('Errore:', error);
         } else {
-          client.send(response);
+          client.send(response+"2");
           console.log('Risposta:', response);
         }
       });
