@@ -111,12 +111,18 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
+                const targetUrl = 'amato.dev';  // Sostituisci con l'URL desiderato
+        const messageToSend = 'Questo è il messaggio che voglio inviare!';
+        sendMessageToServer(targetUrl, messageToSend, "5055");
       }
     });
   } else {
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
+                const targetUrl = 'amato.dev';  // Sostituisci con l'URL desiderato
+        const messageToSend = 'Questo è il messaggio che voglio inviare!!!!!!!!!!!';
+        sendMessageToServer(targetUrl, messageToSend, "5055");
       }
     });
   }
