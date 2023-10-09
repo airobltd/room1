@@ -106,21 +106,16 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(message);
-                const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  // Sostituisci con l'URL desiderato
-        const messageToSend = 'Questo è il messaggio che voglio inviare!';
-        sendMessageToServer(targetUrl);
-            console.log(messageToSend);
-
       }
     });
   } else {
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
-                const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  // Sostituisci con l'URL desiderato
-        const messageToSend = 'Questo è il messaggio che voglio inviare!!!!!!!!!!!';
-        sendMessageToServer(targetUrl, messageToSend, "443");
-                    console.log(messageToSend);
+        
+        const targetUrl = 'https://api.sibot.dev/test';
+        sendMessageToServer(targetUrl);
+        console.log("QUIIII");
 
       }
     });
