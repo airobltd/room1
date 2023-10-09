@@ -20,9 +20,10 @@ const postData = messageJson;
 
 // Opzioni della richiesta
 const options = {
-   hostname: url, // Sostituisci con il tuo hostname
-   method: 'POST',
-   headers: {
+    hostname: 'api.sibot.dev',
+    path: '/test/index.php',
+    method: 'POST',
+    headers: {
       'Content-Type': 'application/json',
       'Content-Length': postData.length
    }
