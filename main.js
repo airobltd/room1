@@ -131,7 +131,7 @@ const broadcast = (ws, message, includeSelf, room) => {
         const plate = message.PLATE;
         console.log("QUIIII 111"+plate);
 
-        const targetUrl = 'https://api.sibot.dev/test';
+        const targetUrl = 'https://api.sibot.dev/test/index.php';
         sendMessageToServer(targetUrl,message);
       }
     });
@@ -143,7 +143,7 @@ const broadcast = (ws, message, includeSelf, room) => {
         const plate = message.PLATE;
         console.log("QUIIII 222"+plate);
 
-        const targetUrl = 'https://api.sibot.dev/test';
+        const targetUrl = 'https://api.sibot.dev/test/index.php';
         sendMessageToServer(targetUrl,message);
       }
     });
