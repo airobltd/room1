@@ -113,9 +113,10 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
 
-        console.log("QUIIII 111");
         client.send(message);
         const plate = message.PLATE;
+        console.log("QUIIII 111"+plate);
+
         const targetUrl = 'https://api.sibot.dev/test?targa=${plate}';
         sendMessageToServer(targetUrl);
       }
@@ -124,9 +125,10 @@ const broadcast = (ws, message, includeSelf, room) => {
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
 
-        console.log("QUIIII 222");
         client.send(message);
         const plate = message.PLATE;
+        console.log("QUIIII 222"+plate);
+
         const targetUrl = 'https://api.sibot.dev/test?targa=${plate}';
         sendMessageToServer(targetUrl);
       }
