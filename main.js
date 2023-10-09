@@ -54,8 +54,6 @@ req.write(postData);
 
 // Chiudi la richiesta
 req.end();
-
-return data;
 }
 
 
