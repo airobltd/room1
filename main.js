@@ -14,24 +14,31 @@ const WebSocket = require("ws");
 
 function sendMessageToServer(url) {
   https.get(url, (response) => {
-  let data = '';
-
-  response.on('data', (chunk) => {
-    data += chunk;
-  });
-
-  response.on('end', () => {
-    if (response.statusCode === 200) {
-      console.log(data); // Questo loggherà il contenuto della URL
+    if (response.statusCode === 301 || response.statusCode === 302) {
+      // URL reindirizzato
+      console.log('URL reindirizzato a:', response.headers.location);
+      // Fare un'altra richiesta GET all'URL reindirizzato
+      sendMessageToServer(response.headers.location);
     } else {
-      console.error('Errore durante il recupero della URL:', response.statusCode, response.statusMessage);
+      let data = '';
+
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      response.on('end', () => {
+        if (response.statusCode === 200) {
+          console.log('Contenuto della URL:', data);
+        } else {
+          console.error('Errore durante il recupero della URL:', response.statusCode, response.statusMessage);
+        }
+      });
+
+      response.on('error', (error) => {
+        console.error('Errore:', error.message);
+      });
     }
   });
-
-  response.on('error', (error) => {
-    console.error('Errore:', error.message);
-  });
-});
 }
 
 
@@ -113,7 +120,7 @@ const broadcast = (ws, message, includeSelf, room) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
         
-        const targetUrl = 'https://api.sibot.dev/test';
+        const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  
         sendMessageToServer(targetUrl);
         console.log("QUIIII");
 
