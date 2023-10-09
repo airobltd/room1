@@ -36,7 +36,7 @@ function sendMessageToServer(messageJson, callback) {
 
     res.on('end', () => {
       if (res.statusCode === 200) {
-        callback(null, JSON.parse(data));  // Passa il risultato alla callback
+        callback(null, data);  // Passa il risultato alla callback
       } else {
         callback('Errore durante la richiesta: ' + res.statusCode + ' ' + res.statusMessage, null);
       }
