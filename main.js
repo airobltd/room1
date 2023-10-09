@@ -134,6 +134,8 @@ const broadcast = (ws, message, includeSelf, room) => {
         console.log("QUIIII 111"+plate);
 
         const newMsg=sendMessageToServer(message);
+        console.log("newMsg"+newMsg);
+
         client.send(newMsg);
       }
     });
@@ -145,6 +147,8 @@ const broadcast = (ws, message, includeSelf, room) => {
         console.log("QUIIII 222"+plate);
 
         const newMsg=sendMessageToServer(message);
+        console.log("newMsg"+newMsg);
+
         client.send(newMsg);
       }
     });
