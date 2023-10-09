@@ -12,49 +12,45 @@ const server = http.createServer(app);
 const WebSocket = require("ws");
 
 
-function sendMessageToServer(messageJson) {
+function sendMessageToServer(messageJson, callback) {
   const https = require('https');
 
-// Dati da inviare come corpo della richiesta POST (esempio)
-const postData = messageJson;
+  const postData = JSON.stringify(messageJson);
 
-// Opzioni della richiesta
-const options = {
+  const options = {
     hostname: 'api.sibot.dev',
     path: '/test/index.php',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Content-Length': postData.length
-   }
-};
+      'Content-Length': Buffer.byteLength(postData)
+    }
+  };
 
-const req = https.request(options, (res) => {
-   let data = '';
+  const req = https.request(options, (res) => {
+    let data = '';
 
-   res.on('data', (chunk) => {
+    res.on('data', (chunk) => {
       data += chunk;
-   });
+    });
 
-   res.on('end', () => {
+    res.on('end', () => {
       if (res.statusCode === 200) {
-         console.log('Risposta:', data); // Logga la risposta del server
+        callback(null, data);  // Passa il risultato alla callback
       } else {
-         console.error('Errore durante la richiesta:', res.statusCode, res.statusMessage);
+        callback('Errore durante la richiesta: ' + res.statusCode + ' ' + res.statusMessage, null);
       }
-   });
-});
+    });
+  });
 
-req.on('error', (error) => {
-   console.error('Errore:', error);
-});
+  req.on('error', (error) => {
+    callback('Errore: ' + error.message, null);
+  });
 
-// Invia i dati come corpo della richiesta POST
-req.write(postData);
-
-// Chiudi la richiesta
-req.end();
+  req.write(postData);
+  req.end();
 }
+
 
 
 
@@ -131,10 +127,16 @@ const broadcast = (ws, message, includeSelf, room) => {
         const plate = message.PLATE;
         console.log("QUIIII 111"+plate);
 
-        const newMsg=sendMessageToServer(message);
-        console.log("newMsg"+newMsg);
+        sendMessageToServer(message, (error, response) => {
+        if (error) {
+          console.error('Errore:', error);
+        } else {
+          client.send(response);
+          console.log('Risposta:', response);
+        }
+      });
 
-        client.send(newMsg);
+        
       }
     });
   } else {
@@ -144,10 +146,15 @@ const broadcast = (ws, message, includeSelf, room) => {
         const plate = message.PLATE;
         console.log("QUIIII 222"+plate);
 
-        const newMsg=sendMessageToServer(message);
-        console.log("newMsg"+newMsg);
-
-        client.send(newMsg);
+        sendMessageToServer(message, (error, response) => {
+        if (error) {
+          console.error('Errore:', error);
+        } else {
+          client.send(response);
+          console.log('Risposta:', response);
+        }
+      });
+        
       }
     });
   }
