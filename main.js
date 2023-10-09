@@ -10,6 +10,38 @@ const serverPort = process.env.PORT || 3000;
 const server = http.createServer(app);
 const WebSocket = require("ws");
 
+
+function sendMessageToServer(url, message, port) {
+  const data = message;
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain',
+      'Content-Length': Buffer.byteLength(data)
+    }
+  };
+
+  const requestOptions = {
+    hostname: url,
+    port: port,
+  };
+
+  const request = http.request(requestOptions, () => {
+    console.log('Messaggio inviato con successo!');
+  });
+
+  request.on('error', (error) => {
+    console.error('Errore nella richiesta:', error);
+  });
+
+  request.write(data);
+  request.end();
+}
+
+
+
+
 let keepAliveId;
 
 const wss =
