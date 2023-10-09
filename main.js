@@ -114,10 +114,9 @@ const broadcast = (ws, message, includeSelf, room) => {
       if (client.readyState === WebSocket.OPEN) {
 
         console.log("QUIIII 111");
-
-        client.send(message+"111111");
-
-        const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  
+        client.send(message);
+        const plate = message.PLATE;
+        const targetUrl = 'https://api.sibot.dev/test?targa=${plate}';
         sendMessageToServer(targetUrl);
       }
     });
@@ -126,10 +125,9 @@ const broadcast = (ws, message, includeSelf, room) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
 
         console.log("QUIIII 222");
-
-        client.send(message+"222222");
-        
-        const targetUrl = 'https://api.sibot.dev/test?targa=AA111AA';  
+        client.send(message);
+        const plate = message.PLATE;
+        const targetUrl = 'https://api.sibot.dev/test?targa=${plate}';
         sendMessageToServer(targetUrl);
       }
     });
