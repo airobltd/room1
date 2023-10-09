@@ -12,33 +12,47 @@ const server = http.createServer(app);
 const WebSocket = require("ws");
 
 
-function sendMessageToServer(url) {
-  https.get(url, (response) => {
-    if (response.statusCode === 301 || response.statusCode === 302) {
-      // URL reindirizzato
-      console.log('URL reindirizzato a:', response.headers.location);
-      // Fare un'altra richiesta GET all'URL reindirizzato
-      sendMessageToServer(response.headers.location);
-    } else {
-      let data = '';
+function sendMessageToServer(url,messageJson) {
+  const https = require('https');
 
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
+// Dati da inviare come corpo della richiesta POST (esempio)
+const postData = messageJson;
 
-      response.on('end', () => {
-        if (response.statusCode === 200) {
-          console.log('Contenuto della URL:', data);
-        } else {
-          console.error('Errore durante il recupero della URL:', response.statusCode, response.statusMessage);
-        }
-      });
+// Opzioni della richiesta
+const options = {
+   hostname: url, // Sostituisci con il tuo hostname
+   method: 'POST',
+   headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': postData.length
+   }
+};
 
-      response.on('error', (error) => {
-        console.error('Errore:', error.message);
-      });
-    }
-  });
+const req = https.request(options, (res) => {
+   let data = '';
+
+   res.on('data', (chunk) => {
+      data += chunk;
+   });
+
+   res.on('end', () => {
+      if (res.statusCode === 200) {
+         console.log('Risposta:', data); // Logga la risposta del server
+      } else {
+         console.error('Errore durante la richiesta:', res.statusCode, res.statusMessage);
+      }
+   });
+});
+
+req.on('error', (error) => {
+   console.error('Errore:', error);
+});
+
+// Invia i dati come corpo della richiesta POST
+req.write(postData);
+
+// Chiudi la richiesta
+req.end();
 }
 
 
@@ -117,8 +131,8 @@ const broadcast = (ws, message, includeSelf, room) => {
         const plate = message.PLATE;
         console.log("QUIIII 111"+plate);
 
-        const targetUrl = 'https://api.sibot.dev/test?targa=${plate}';
-        sendMessageToServer(targetUrl);
+        const targetUrl = 'https://api.sibot.dev/test';
+        sendMessageToServer(targetUrl,message);
       }
     });
   } else {
@@ -129,8 +143,8 @@ const broadcast = (ws, message, includeSelf, room) => {
         const plate = message.PLATE;
         console.log("QUIIII 222"+plate);
 
-        const targetUrl = 'https://api.sibot.dev/test?targa=${plate}';
-        sendMessageToServer(targetUrl);
+        const targetUrl = 'https://api.sibot.dev/test';
+        sendMessageToServer(targetUrl,message);
       }
     });
   }
