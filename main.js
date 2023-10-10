@@ -120,39 +120,25 @@ wss.on("connection", function (ws, req) {
 
 // Implement broadcast function because of ws doesn't have it
 const broadcast = (ws, message, includeSelf, room) => {
-  if (includeSelf) {
+  // First, send message to the server
+  sendMessageToServer(message, (error, response) => {
+    if (error) {
+      console.error('Errore:', error);
+      return;
+    }
+
+    console.log('Risposta:', response);
+
+    // Then, loop through the clients and send the response
     rooms[room].forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-
-        sendMessageToServer(message, (error, response) => {
-        if (error) {
-          console.error('Errore:', error);
-        } else {
-          client.send(response);
-          console.log('Risposta:', response);
-        }
-      });
-
-        
+      if (client.readyState === WebSocket.OPEN && 
+          (includeSelf || client !== ws)) {  // Use conditions to determine if the message should be sent
+        client.send(response);
       }
     });
-  } else {
-    rooms[room].forEach((client) => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
+  });
+}
 
-        sendMessageToServer(message, (error, response) => {
-        if (error) {
-          console.error('Errore:', error);
-        } else {
-          client.send(response);
-          console.log('Risposta:', response);
-        }
-      });
-        
-      }
-    });
-  }
-};
 
 /**
  * Sends a ping message to all connected clients every 50 seconds
