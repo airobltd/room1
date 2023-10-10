@@ -120,34 +120,67 @@ wss.on("connection", function (ws, req) {
 
 // Implement broadcast function because of ws doesn't have it
 const broadcast = (ws, message, includeSelf, room) => {
-  if (includeSelf) {
+  if (includeSelf) 
+  {
+    let entrato = 0;
+
     rooms[room].forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
 
-        sendMessageToServer(message, (error, response) => {
-        if (error) {
-          console.error('Errore:', error);
-        } else {
-          client.send(response);
-          console.log('Risposta:', response);
+
+      let risposta = ''
+        
+
+        if(entrato==0)
+        {
+          sendMessageToServer(message, (error, response) => {
+            if (error) {
+              console.error('Errore:', error);
+            } else {
+              console.log('Risposta:', response);
+              risposta = response;
+
+            }
+          });
+
+          entrato=1;
         }
-      });
+
+          client.send(risposta);
+
+        
+        
+
+
 
         
       }
     });
-  } else {
+  } else 
+  {
+    let entrato = 0;
+
     rooms[room].forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
 
-        sendMessageToServer(message, (error, response) => {
-        if (error) {
-          console.error('Errore:', error);
-        } else {
-          client.send(response);
-          console.log('Risposta:', response);
+
+        let risposta = ''
+
+        
+
+        if(entrato==0)
+        {
+            sendMessageToServer(message, (error, response) => {
+            if (error) {
+              console.error('Errore:', error);
+            } else {
+              console.log('Risposta:', response);
+              risposta=response;
+            }
+          });
+              entrato=1;
         }
-      });
+        client.send(risposta);
         
       }
     });
